@@ -11,9 +11,16 @@ services:
     command: bash -c "python /usr/src/app/create_db.py && /usr/local/bin/gunicorn -w 2 -b :8000 app:app"
 
   postgres:
+    depends_on:
+      - hawkeye
     restart: always
     image: postgres:latest
     ports:
       - "5432:5432"
     environment:
         TZ: "Australia/Melbourne"
+
+  hawkeye:
+    image: hawkeyesec/scanner-cli:latest
+    volumes:
+      - ./web:/target
